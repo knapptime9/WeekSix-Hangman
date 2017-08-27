@@ -1,0 +1,21 @@
+{
+  "name": "weeklyproject-hangman",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "John Knapp",
+  "license": "ISC",
+  "dependencies": {
+    "all": "0.0.0",
+    "body-parser": "^1.17.2",
+    "express": "^4.15.4",
+    "express-session": "^1.15.5",
+    "express-validator": "^3.2.1",
+    "fs": "0.0.1-security",
+    "mustache-express": "^1.2.5"
+  },
+  "devDependencies": {},
+  "description": "hangman game "
+}
