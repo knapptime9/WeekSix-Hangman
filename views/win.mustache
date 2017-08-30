@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 
@@ -23,24 +24,16 @@
   </section>
 
   <section id="input">
-    {{#livesLeft}}
-      <form class="guess" action="/guess" method="post">
-        <input type="text" name="letter" placeholder="Enter guess here" autofocus>
-        <button id="guessButton">Make a guess</button>
-      </form>
-    {{/livesLeft}}
-      <!-- If player runs our of guesses. -->
-    {{#gameOver}}
-      <p id="loser">You Lose!!!</p>
-      <form class="reset" action="/reset" method="post">
-        <button>Try again</button>
-      </form>
-    {{/gameOver}}
+    <p id="winner">You Win!!!</p>
+    <form class="reset" action="/reset" method="post">
+      <button>Try again</button>
+    </form>
   </section>
 
   <section id="error">
     {{error}}
   </section>
+
 
   <section id="lettersGuessed">
     <p>Letters guessed:

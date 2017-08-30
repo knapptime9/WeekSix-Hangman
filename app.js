@@ -33,7 +33,7 @@ app.use(function(req, res, next) {
     req.session.activeWord = words[req.session.selectRandomWord];
     activeWord = req.session.activeWord;
     splitWord = activeWord.split("");
-    req.session.splitWord = splitWord
+    req.session.splitWord = splitWord;
     req.session.length = activeWord.length;
     // req.session.correctLetters = activeWord.split([' ']);
     req.session.livesLeft = 8;
@@ -59,8 +59,8 @@ app.use(function(req, res, next) {
 });
 
 app.get('/', function (req, res, next){
-    if (req.session.win == true){
-        res.redirect("/win");
+    if (!req.session.blanks.includes("_ ")){
+        res.redirect("win");
       }
     else {
         res.render('game', {
@@ -72,7 +72,13 @@ app.get('/', function (req, res, next){
         });
     }
 });
-
+app.get('/win', function(req, res) {
+  res.render('win', {
+    wordGuess: req.session.blanks,
+    guessedLetters: req.session.guessedLetters,
+    livesLeft: req.session.livesLeft
+  });
+});
 
 app.get('/guess', function(req, res){
   var guess = req.body.letter;
@@ -100,6 +106,10 @@ app.post("/guess", function(req, res){
   res.redirect('/');
 });
 
+app.post('/reset', function(req, res){
+  req.session.selectRandomWord = null;
+  res.redirect("/");
+});
 
 
 
