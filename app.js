@@ -7,16 +7,9 @@ const session = require('express-session');
 const expressValidator = require('express-validator');
 const fs = require('fs');
 const words = fs.readFileSync("/usr/share/dict/words", "utf-8").toLowerCase().split("\n");
-// This is stuff to import from our own code
 
-
-
-// BOILER PLATE
-
-// for express
 app.use(express.static('public'));
 
-// for mustache
 app.engine('mustache', expressMustache());
 app.set('views', './views');
 app.set('view engine', 'mustache');
@@ -24,12 +17,8 @@ app.set('view engine', 'mustache');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-// for express-validator
 app.use(expressValidator());
 
-
-// for express-session
 app.use(
   session({
     secret: 'TotallyAwesomeSuperCoolTopSecretPasswordandHandshake',
@@ -42,25 +31,73 @@ app.use(function(req, res, next) {
   if(!req.session.selectRandomWord){
     req.session.selectRandomWord = Math.floor(Math.random() * words.length);
     req.session.activeWord = words[req.session.selectRandomWord];
-    req.session.correctLetters = words[req.session.selectRandomWord].split("").map(function() {
-      return req.session.correctLetters;
-    });
+    activeWord = req.session.activeWord;
+    splitWord = activeWord.split("");
+    req.session.splitWord = splitWord
+    req.session.length = activeWord.length;
+    // req.session.correctLetters = activeWord.split([' ']);
     req.session.livesLeft = 8;
-    req.session.wrongLetters = [];
+    req.session.guessedLetters = [];
+    req.session.blanks = [];
+    req.session.gameOver = false;
+    req.session.win = false;
+    for (var i = 0; i < req.session.length; i++) {
+      req.session.blanks.push('_ ');
+    }
+
   }
-  // console.log(req.session);
+
+  console.log(req.session.livesLeft);
+  console.log(req.session.guessedLetters);
+  console.log(activeWord);
+  console.log(splitWord);
+  console.log(req.session.activeWord);
+  console.log(req.session.length);
+  console.log(req.session.blanks);
+  console.log(req.session);
   next();
 });
 
-app.get('/', function(req, res){
-  if (req.session.guessedLetters.join("") === req.session.activeWord){
-    res.redirect("/win");
-  }else {
-    res.render("/game");
-    var guessedletters = req.session.guessedLetters;
-    var wrongLetters = req.session.wrongLetters;
-    var lives = req.sesion.livesLeft;
+app.get('/', function (req, res, next){
+    if (req.session.win == true){
+        res.redirect("/win");
+      }
+    else {
+        res.render('game', {
+          wordGuess: req.session.blanks,
+          guessedLetters: req.session.guessedLetters,
+          livesLeft: req.session.livesLeft
+          // gameOver: req.session.gameOver,
+          // win: req.session.win
+        });
     }
+});
+
+
+app.get('/guess', function(req, res){
+  var guess = req.body.letter;
+  res.render('game', {
+    wordGuess: req.session.blanks,
+    guessedLetters: req.session.guessedLetters,
+    livesLeft: req.session.livesLeft
+    // win: req.session.win
+  });
+});
+
+app.post("/guess", function(req, res){
+  var guess = req.body.letter;
+  if (!req.session.splitWord.includes(guess)) {
+    req.session.livesLeft = req.session.livesLeft - 1;
+  }
+  else {
+    for (var i = 0; i < req.session.length; i++){
+      if (guess === req.session.splitWord[i]) {
+        req.session.blanks.splice(i, 1, guess).join(" ");
+      }
+  }
+  }
+  req.session.guessedLetters.push(guess);
+  res.redirect('/');
 });
 
 
