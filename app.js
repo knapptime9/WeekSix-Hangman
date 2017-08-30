@@ -61,7 +61,10 @@ app.use(function(req, res, next) {
 app.get('/', function (req, res, next){
     if (!req.session.blanks.includes("_ ")){
         res.redirect("win");
-      }
+    }
+    else if (req.session.livesLeft === 0) {
+      res.redirect("lose");
+    }
     else {
         res.render('game', {
           wordGuess: req.session.blanks,
@@ -74,6 +77,14 @@ app.get('/', function (req, res, next){
 });
 app.get('/win', function(req, res) {
   res.render('win', {
+    wordGuess: req.session.blanks,
+    guessedLetters: req.session.guessedLetters,
+    livesLeft: req.session.livesLeft
+  });
+});
+
+app.get('/lose', function(req, res) {
+  res.render('lose', {
     wordGuess: req.session.blanks,
     guessedLetters: req.session.guessedLetters,
     livesLeft: req.session.livesLeft

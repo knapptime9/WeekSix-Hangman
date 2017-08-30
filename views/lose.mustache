@@ -13,7 +13,7 @@
     <div class="headerSpace">
       <h1>HANGMAN!</h1>
       <p id="guessesRemaining">You have
-        {{#livesLeft}}{{.}}{{/livesLeft}} lives left remaining.</p>
+        {{#livesLeft}}{{0 }}{{/livesLeft}} lives left remaining.</p>
     </div>
   </header>
 
@@ -24,7 +24,7 @@
   </section>
 
   <section id="input">
-    <p id="winner">You Win!!!</p>
+    <p id="lose">Sorry, You Lose!!!</p>
     <form class="reset" action="/reset" method="post">
       <button>Try again</button>
     </form>
